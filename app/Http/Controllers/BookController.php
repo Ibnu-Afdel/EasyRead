@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
@@ -18,8 +22,10 @@ class BookController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Book $book)
     {
+        Gate::authorize('create', $book);
+        
         return view('books.create') ;
     }
 
@@ -30,11 +36,28 @@ class BookController extends Controller
     {
         $attribute = $request->validate([
             'name' => 'required|min:5',
-            'description' => 'required'
+            'description' => 'required',
+            'BookCover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]) ;
 
+        $attribute['user_id'] = Auth::id() ;
+        
+            if($request->hasFile('BookCover')){
+                $imagepath = $request->file('BookCover')->store('BookCovers', 'public');
+                $attribute['BookCover'] = Storage::url($imagepath);
+            } else{
+                $attribute['BookCover'] = null ;
+            }
+
         Book::create($attribute);
-        return redirect()->route('books.index');
+        
+        $user = auth()->user();
+        if ($user->is_admin){
+            return redirect()->route('admin');
+        } else{
+            return redirect()->route('books.index');
+        }
+        
     }
 
     /**
@@ -42,6 +65,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
+        
         return view('books.show', ['book' => $book]);
     }
 
@@ -60,20 +84,51 @@ class BookController extends Controller
     {
         $attribute = $request->validate([
             'name' => 'required|min:5',
-            'description' => 'required'
+            'description' => 'required',
+            'BookCover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
+
+        $attribute['user_id'] = Auth::id() ;
+
+        if($request->hasFile('BookCover')){
+            if ($book->BookCover){
+                Storage::disk('public')->delete(str_replace('/storage/', '', $book->BookCover)) ;
+            }
+            $imagepath = $request->file('BookCover')->store('BookCovers', 'public');
+            $attribute['BookCover'] = Storage::url($imagepath);
+        } else {
+            $attribute['BookCover'] = null; 
+        }
 
         $book->update($attribute);
 
-        return redirect()->route('books.show', ['book' => $book]);
+        $user = auth()->user();
+
+        if ($user->is_admin){
+            return redirect()->route('admin', ['book' => $book]);
+        } else {
+            return redirect()->route('books.show', ['book' => $book]);
+        }   
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Book $book)
+    public function destroy(Book $book , Request $request)
     {
+            if ($book->BookCover){
+                Storage::disk('public')->delete(str_replace('/storage/', '', $book->BookCover)) ;
+        }
         $book->delete();
-        return redirect()->route('books.index');
+
+        $user = auth()->user();
+        
+        if ($user->is_admin){
+            return redirect()->route('admin', ['book' => $book]);
+        } else {
+            return redirect()->route('books.index');
+        } 
+
+        
     }
 }
