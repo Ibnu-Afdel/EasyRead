@@ -16,7 +16,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        return view('books.index', ['books' => Book::all()]) ;
+        return view('books.index', ['books' => Book::with('user')->get()]) ;
     }
 
     /**
@@ -50,8 +50,8 @@ class BookController extends Controller
             }
 
         Book::create($attribute);
-        
-        $user = auth()->user();
+
+        $user = Auth::user();
         if ($user->is_admin){
             return redirect()->route('admin');
         } else{
@@ -102,7 +102,7 @@ class BookController extends Controller
 
         $book->update($attribute);
 
-        $user = auth()->user();
+        $user = Auth::user();
 
         if ($user->is_admin){
             return redirect()->route('admin', ['book' => $book]);
@@ -121,7 +121,7 @@ class BookController extends Controller
         }
         $book->delete();
 
-        $user = auth()->user();
+        $user = Auth::user();
         
         if ($user->is_admin){
             return redirect()->route('admin', ['book' => $book]);

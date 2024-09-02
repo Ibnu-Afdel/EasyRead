@@ -3,38 +3,52 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
-use App\Models\BorrowedBook;
-use App\Models\User;
+use App\Models\BorrowedBook;  // Assuming 'Borrow' is the same as 'BorrowedBook'
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BookBorrowController extends Controller
 {
-    public function borrow(Request $request, Book $book,)
-        {
-            // first attempt (works but not as the latter one,)
-    //         Auth::user()->borrowdBooks()->attach($book->id);
-    //     return redirect()->back()->with('success', 'Book borrowed successfully!');
+    public function borrow(Request $request, Book $book)
+    {
+        $userId = Auth::id();
+        $user = Auth::user();
+        $currentBorrows = BorrowedBook::where('user_id', $user->id)
+        ->where('status', 'borrowed')->count();
 
-    $book = Book::findOrFail($book->id);
-    $userId = Auth::id();
+        if ($currentBorrows >= 3) {
+            return redirect()->back()->with('error', 'You cannot borrow more than 3 books at a time.');
+        }
 
-    // Check if the user has already borrowed this book
-    $alreadyBorrowed = BorrowedBook::where('book_id', $book->id)
-                                    ->where('user_id', $userId)
-                                    ->exists();
+        $alreadyBorrowed = BorrowedBook::where('book_id', $book->id)
+                                        ->where('user_id', $userId)
+                                        ->where('status', 'borrowed')
+                                        ->exists();
 
-    if ($alreadyBorrowed) {
-        return redirect()->back()->with('error', 'You have already borrowed this book.');
+        if ($alreadyBorrowed) {
+            return redirect()->back()->with('error', 'You have already borrowed this book.');
+        }
+
+        // Create a new BorrowedBook record
+        $borrow = new BorrowedBook();
+        $borrow->user_id = $user->id;
+        $borrow->book_id = $book->id;
+        $borrow->borrow_date = now();
+        $borrow->due_date = now()->addDays(14);
+        $borrow->status = 'borrowed';
+        $borrow->save();
+
+        return redirect()->back()->with('success', 'Book borrowed successfully!');
     }
 
-    // Create a new BorrowedBook record
-    BorrowedBook::create([
-        'book_id' => $book->id,
-        'user_id' => $userId,
-        'due_date' => now()->addDays(14),
-    ]);
+    public function markAsReturned($id)
+    {
+        $borrow = BorrowedBook::findOrFail($id);
+        $borrow->status = 'returned'; 
+        $borrow->return_date = now();
+        $borrow->save();
 
-    return redirect()->back()->with('success', 'Book borrowed successfully!');
-}
+        return redirect()->route('librarian.borrowed_books')->with('success', 'Book marked as returned.');
+        // with message not showen yet
+    }
 }

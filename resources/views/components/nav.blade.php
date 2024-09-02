@@ -2,7 +2,6 @@
     <div class="flex flex-wrap items-center justify-between mx-auto max-w-screen-xl">
         <div class="flex items-center lg:w-1/3">
             <a href="https://flowbite.com" class="flex items-center">
-                <img src="https://flowbite.com/docs/images/logo.svg" class="mr-3 h-6 sm:h-9" alt="Flowbite Logo" />
                 <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
                     <h1>@yield('heading')</h1>
                 </span>

@@ -14,7 +14,8 @@ class AdminController extends Controller
     public function index()
     {
 
-        return view('admin.index', ['books' => Book::simplePaginate(15), 'user' => Auth::user()]);
+        return view('admin.index');
+        // , ['books' => Book::simplePaginate(15), 'user' => Auth::user()]
     }
 
 }
