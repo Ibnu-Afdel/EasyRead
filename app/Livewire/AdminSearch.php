@@ -24,3 +24,5 @@ class AdminSearch extends Component
         return view('livewire.admin-search', ['books' => $books, 'user' => $user]);
     }
 }
+
+

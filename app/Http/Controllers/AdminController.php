@@ -15,7 +15,7 @@ class AdminController extends Controller
     {
 
         return view('admin.index');
-        // , ['books' => Book::simplePaginate(15), 'user' => Auth::user()]
+//         , ['books' => Book::simplePaginate(15), 'user' => Auth::user()]
     }
 
 }
