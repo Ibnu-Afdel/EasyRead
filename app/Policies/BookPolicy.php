@@ -13,13 +13,13 @@ class BookPolicy
     /**
  * Perform pre-authorization checks.
  */
-    public function before(User $user, string $ability): bool
+    public function before(User $user, string $ability)
     {
-    if ($user->role === 'owner'  || $user->role === 'admin' ) {
+    if ($user->role === 'owner') {
         return true;
     }
 
-    return false;
+    return null;
     }
 
     /**
@@ -33,7 +33,7 @@ class BookPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Book $book): bool
+    public function view(User $user): bool
     {
         return true;
     }
@@ -44,7 +44,7 @@ class BookPolicy
     public function create(User $user): bool
     {
 
-        return $user->is_admin  ;
+        return $user->role === 'admin';
     }
 
     /**
@@ -52,7 +52,7 @@ class BookPolicy
      */
     public function update(User $user, Book $book): bool
     {
-        return $user->id === $book->user->id && $user->is_admin ;
+        return $user->id === $book->user->id && $user->role === 'admin';
 
     }
     /**
@@ -60,8 +60,7 @@ class BookPolicy
      */
     public function delete(User $user, Book $book): bool
     {
-        dd('your fine');
-        return $user->id === $book->user->id  ;
+        return $user->id === $book->user->id && $user->role === 'admin'  ;
         // librarians can report to admins
     }
 
@@ -70,7 +69,7 @@ class BookPolicy
      */
     public function restore(User $user, Book $book): bool
     {
-        return $user->is_admin;
+        return $user->role === 'admin';
     }
 
     /**
@@ -78,6 +77,6 @@ class BookPolicy
      */
     public function forceDelete(User $user, Book $book): bool
     {
-        return $user->is_admin;
+        return $user->role === 'admin';
     }
 }

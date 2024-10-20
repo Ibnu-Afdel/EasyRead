@@ -14,14 +14,20 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $role): Response
+    public function handle(Request $request, Closure $next, $roles): Response
     {
+
+        $roles = explode(',', $roles);
+
         if (!Auth::check()){
             return redirect()->route('login');
         }
-        if (Auth::user()->role !== $role){
-            abort(403);
+
+        // Check if the authenticated user's role is in the allowed roles
+        if (!in_array(auth()->user()->role, $roles)) {
+            abort(403) ;
         }
         return $next($request);
+
     }
 }

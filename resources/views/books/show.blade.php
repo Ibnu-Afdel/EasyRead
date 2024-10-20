@@ -58,7 +58,7 @@
                 <a href="{{ route('books.index') }}" class="inline-flex items-center font-medium text-primary-600 dark:text-primary-500 hover:underline">
                     Back
                 </a>
-                @can('update', 'App\Models\Book')
+                @can('update', $book)
                 <a href="{{ route('books.edit', $book) }}" class="inline-flex items-center font-medium text-primary-600 dark:text-primary-500 hover:underline">
                     Edit
                     <svg class="ml-2 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

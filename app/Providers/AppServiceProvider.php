@@ -44,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
         // Gate::policy(Book::class, BookPolicy::class);
 
         Gate::define('is-librarian', function(User $user){
-            return $user->role === 'librarian' || $user->role === 'admin' || $user->role === 'owner' ;
+            return $user->role === 'librarian' || $user->role === 'owner' ;
         }) ;
     }
 }

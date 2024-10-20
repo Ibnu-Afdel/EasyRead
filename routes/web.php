@@ -17,15 +17,17 @@ Route::view('/about', 'about' )->name('about');
 
 Route::middleware('auth')->group(function(){
     Route::controller(BookController::class)->group(function(){
-        Route::get('/books/create' , 'create')->name('books.create')
-        ;
+        Route::get('/books/create' , 'create')->name('books.create');
         Route::post('/books' , 'store')->name('books.store');
-        Route::get('/books/{book}/edit' , 'edit')->name('books.edit')
-        ->can('update', Book::class);
-        Route::patch('/books/{book}' , 'update')->name('books.update')
-        ->can('delete', Book::class);
-        Route::delete('/books/{book}' , 'destroy')->name('books.destroy')
-        ->can('delete', Book::class);
+        Route::get('/books/{book}/edit' , 'edit')
+            ->name('books.edit');
+
+        Route::patch('/books/{book}' , 'update')
+            ->name('books.update');
+
+        Route::delete('/books/{book}' , 'destroy')
+            ->name('books.destroy');
+
     }) ;
             // Log Out
         Route::delete('/logout' , [SessionController::class , 'destroy' ])->name('logout');
@@ -60,7 +62,9 @@ Route::controller(LibrarianController::class)->group(function(){
 }) ;
 
 Route::post('/books/{book}/borrow', [BookBorrowController::class, 'borrow'])->name('books.borrow');
-Route::post('/borrowed-books/{id}/return', [BookBorrowController::class, 'markAsReturned'])->name('borrowed-books.return');
+Route::post('/borrowed-books/{id}/return', [BookBorrowController::class, 'markAsReturned'])
+    ->name('borrowed-books.return')
+    ->middleware('auth','role:owner,librarian');
 
 Route::middleware(['auth', 'role:owner'])->group(function(){
     Route::get('/owner/profile', [OwnerProfileController::class, 'edit'])->name('owner.profile');
