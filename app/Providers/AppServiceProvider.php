@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
-        if (!User::where('email', env('DEFAULT_ADMIN_EMAIL'))->exists()) {
+        if (!User::where('role', 'owner')->exists()) {
             User::create([
                 'name' => env('DEFAULT_ADMIN_NAME'),
                 'email' => env('DEFAULT_ADMIN_EMAIL'),

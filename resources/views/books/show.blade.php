@@ -3,7 +3,7 @@
     @section('heading')
 
     {{ $book->name }}
-    
+
     @endsection
 
      <div class="ml-20 mt-10 ">
@@ -13,6 +13,19 @@
             </svg>
         </a>
      </div>
+
+    @if (session('success'))
+        <div class="bg-green-200 text-green-700 p-4 rounded-md mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="bg-red-200 text-red-700 p-4 rounded-md mb-4">
+            {{ session('error') }}
+        </div>
+    @endif
+
 
     <article class="p-6 mt-4 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 mx-auto" style="max-width: 90%;">
         <div class="flex justify-between items-center mb-5 text-gray-500">
@@ -24,11 +37,11 @@
             <span class="text-sm">{{ $book->created_at->diffForHumans() }}</span>
         </div>
         <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $book->name }}</h2>
-        
+
         @if($book->BookCover)
             <div class="flex">
-                <img src="{{ asset($book->BookCover) }}" 
-                     alt="{{ $book->BookCover }}" 
+                <img src="{{ asset($book->BookCover) }}"
+                     alt="{{ $book->BookCover }}"
                      class="w-60 h-60 object-cover rounded-lg mr-4 mb-4 mt-4"
                      style="object-position: center;">
                 <p class="font-light text-gray-500 dark:text-gray-400">{{ $book->description }}</p>
@@ -39,7 +52,7 @@
             <div>
                 <button form="borrow-book" type="submit" class=" font-bold text-yellow-400 hover:underline" onclick="return confirm('Are you sure you want to borrow this book?');" >Borrow</button>
             </div>
-        
+
         <div class="flex justify-between items-center mt-4">
             <div class="flex items-center space-x-4">
                 <a href="{{ route('books.index') }}" class="inline-flex items-center font-medium text-primary-600 dark:text-primary-500 hover:underline">
@@ -68,8 +81,8 @@
             @endif
         </div>
     </article>
-    
-    
+
+
     <form  class="hidden" id="borrow-book" action="{{ route('books.borrow', $book) }}" method="POST">
         @csrf
     </form>

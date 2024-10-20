@@ -6,6 +6,8 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\LibrarianController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SessionController;
+use \App\Http\Controllers\ownerProfileController;
+use App\Http\Controllers\UserManagementController;
 use App\Models\Book;
 use Illuminate\Support\Facades\Route;
 
@@ -60,3 +62,12 @@ Route::controller(LibrarianController::class)->group(function(){
 Route::post('/books/{book}/borrow', [BookBorrowController::class, 'borrow'])->name('books.borrow');
 Route::post('/borrowed-books/{id}/return', [BookBorrowController::class, 'markAsReturned'])->name('borrowed-books.return');
 
+Route::middleware(['auth', 'role:owner'])->group(function(){
+    Route::get('/owner/profile', [OwnerProfileController::class, 'edit'])->name('owner.profile');
+    Route::post('/owner/profile', [ownerProfileController::class, 'update'])->name('owner.profile.update');
+});
+
+Route::middleware(['auth', 'role:owner'])->group(function() {
+    Route::post('/users/{user}/promote', [UserManagementController::class, 'promote'])->name('users.promote');
+    Route::post('/users/{user}/demote', [UserManagementController::class, 'demote'])->name('users.demote');
+});
