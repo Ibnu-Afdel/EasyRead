@@ -30,7 +30,7 @@ Route::middleware('auth')->group(function(){
 }) ;
 
 Route::middleware('guest')->group(function(){
-   
+
      // Register
         Route::get('/register' , [RegisterController::class , 'register' ])->name('register');
         Route::post('/register' , [RegisterController::class , 'store' ])->name('register.store');

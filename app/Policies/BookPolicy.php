@@ -15,10 +15,10 @@ class BookPolicy
  */
     public function before(User $user, string $ability): bool
     {
-    if ($user->is_admin ) {
+    if ($user->role === 'owner'  || $user->role === 'admin' ) {
         return true;
     }
- 
+
     return false;
     }
 
@@ -43,7 +43,7 @@ class BookPolicy
      */
     public function create(User $user): bool
     {
-        
+
         return $user->is_admin  ;
     }
 
@@ -53,7 +53,7 @@ class BookPolicy
     public function update(User $user, Book $book): bool
     {
         return $user->id === $book->user->id && $user->is_admin ;
-    
+
     }
     /**
      * Determine whether the user can delete the model.

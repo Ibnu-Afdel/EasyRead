@@ -38,24 +38,24 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_admin' => 'boolean',
-            'is_member' => 'boolean',
-            'is_librarian' => 'boolean',
+//            'is_admin' => 'boolean',
+//            'is_member' => 'boolean',
+//            'is_librarian' => 'boolean',
         ];
     }
 
-    public function getRoleAttribute()
-    {
-        if ($this->is_admin) {
-            return 'Admin';
-        } elseif ($this->is_librarian) {
-            return 'Librarian';
-        } elseif ($this->is_member) {
-            return 'Member';
-        } else {
-            return 'Guest';
-        }
-    }
+//    public function getRoleAttribute()
+//    {
+//        if ($this->is_admin) {
+//            return 'Admin';
+//        } elseif ($this->is_librarian) {
+//            return 'Librarian';
+//        } elseif ($this->is_member) {
+//            return 'Member';
+//        } else {
+//            return 'Guest';
+//        }
+//    }
 
     public function book()
     {
