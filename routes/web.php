@@ -67,7 +67,7 @@ Route::post('/borrowed-books/{id}/return', [BookBorrowController::class, 'markAs
     ->middleware('auth','role:owner,librarian');
 
 Route::middleware(['auth', 'role:owner'])->group(function(){
-    Route::get('/owner/profile', [OwnerProfileController::class, 'edit'])->name('owner.profile');
+    Route::get('/owner/profile', [OwnerProfileController::class, 'profile'])->name('owner.profile');
     Route::post('/owner/profile', [ownerProfileController::class, 'update'])->name('owner.profile.update');
 });
 

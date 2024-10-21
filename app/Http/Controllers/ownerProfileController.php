@@ -9,10 +9,11 @@ use Illuminate\Support\Facades\Hash;
 
 class ownerProfileController extends Controller
 {
-    public function edit()
+    public function profile()
     {
+        $user = Auth::user();
         $users = User::where('role', '!=', 'owner')->get();
-        return view('owner.profile', ['user' => Auth::user()],  compact('users'));
+        return view('owner.profile', compact('user', 'users'));
     }
 
     public function update(Request $request){
