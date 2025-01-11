@@ -41,13 +41,13 @@
                         </svg>
                         <span class="ml-2 text-lg font-semibold">Telegram</span>
                     </a>
-                    <a href="#" class="mr-5 mb-5 lg:mb-0 hover:text-gray-800 dark:hover:text-gray-400 flex items-center">
+                    <a href="https://github.com/Ibnu-Afdel" class="mr-5 mb-5 lg:mb-0 hover:text-gray-800 dark:hover:text-gray-400 flex items-center">
                         <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 .297C5.373.297 0 5.67 0 12.297c0 5.297 3.438 9.8 8.205 11.388.6.112.82-.26.82-.577 0-.285-.01-1.04-.015-2.04-3.338.726-4.042-1.61-4.042-1.61-.546-1.387-1.332-1.757-1.332-1.757-1.09-.746.082-.73.082-.73 1.204.084 1.838 1.237 1.838 1.237 1.07 1.836 2.81 1.305 3.495.997.108-.774.418-1.305.76-1.605-2.665-.305-5.466-1.332-5.466-5.93 0-1.31.467-2.38 1.236-3.22-.124-.304-.536-1.527.117-3.176 0 0 1.01-.323 3.3 1.23a11.52 11.52 0 013.005-.403c1.02.005 2.045.138 3.005.403 2.29-1.552 3.3-1.23 3.3-1.23.653 1.65.242 2.872.118 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.803 5.625-5.475 5.92.43.37.81 1.102.81 2.222 0 1.606-.015 2.896-.015 3.286 0 .32.218.694.825.576C20.565 22.092 24 17.59 24 12.297 24 5.67 18.627.297 12 .297z" fill="currentColor"/>
                         </svg>
                         <span class="ml-2 text-lg font-semibold">GitHub</span>
                     </a>
-                    <a href="#" class="mr-5 mb-5 lg:mb-0 hover:text-gray-800 dark:hover:text-gray-400 flex items-center">
+                    <a href="https://www.linkedin.com/in/abubeker-afdel-6362b52ab" class="mr-5 mb-5 lg:mb-0 hover:text-gray-800 dark:hover:text-gray-400 flex items-center">
                         <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M4.983 3.5C4.983 2.12 3.882 1 2.491 1 1.101 1 0 2.12 0 3.5 0 4.88 1.101 6 2.491 6c1.391 0 2.492-1.12 2.492-2.5zM.293 24h4.428V7.98H.293V24zM24 24h-4.428v-7.802c0-1.858-.037-4.25-2.587-4.25-2.59 0-2.987 2.017-2.987 4.1V24H9.569V7.98h4.245v2.178h.061c.591-1.12 2.037-2.294 4.196-2.294 4.481 0 5.307 2.947 5.307 6.777V24z" fill="currentColor"/>
                         </svg>
