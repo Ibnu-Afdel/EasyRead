@@ -15,9 +15,14 @@ return new class extends Migration
         Schema::create('books', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->string('name');
-            $table->text('description');
-            $table->string('BookCover')->nullable();
+            $table->string('title');
+            $table->string('author')->nullable();
+            $table->text('description')->nullable();
+            $table->string('cover_url')->nullable();
+            $table->string('download_url')->nullable();
+            $table->string('read_url');
+            $table->enum('status', ['reading', 'completed'])->default('reading');
+            $table->string('last_page')->nullable();
             $table->timestamps();
         });
     }
