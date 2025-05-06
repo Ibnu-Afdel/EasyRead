@@ -16,7 +16,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-  protected $guarded = [];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -38,29 +38,12 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-//            'is_admin' => 'boolean',
-//            'is_member' => 'boolean',
-//            'is_librarian' => 'boolean',
+            //            'is_admin' => 'boolean',
+            //            'is_member' => 'boolean',
+            //            'is_librarian' => 'boolean',
         ];
     }
 
-//    public function getRoleAttribute()
-//    {
-//        if ($this->is_admin) {
-//            return 'Admin';
-//        } elseif ($this->is_librarian) {
-//            return 'Librarian';
-//        } elseif ($this->is_member) {
-//            return 'Member';
-//        } else {
-//            return 'Guest';
-//        }
-//    }
-
-    public function book()
-    {
-        return $this->hasMany(Book::class);
-    }
 
     public function borrowdBooks()
     {
@@ -68,7 +51,14 @@ class User extends Authenticatable
     }
 
     public function borrowedBooks()
-{
-    return $this->hasMany(BorrowedBook::class);
-}
+    {
+        return $this->hasMany(BorrowedBook::class);
+    }
+
+    public function books()
+    {
+        return $this->belongsToMany(Book::class)
+            ->withPivot(['status', 'last_page', 'started_at', 'finished_at'])
+            ->withTimestamps();
+    }
 }

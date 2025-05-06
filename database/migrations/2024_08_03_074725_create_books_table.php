@@ -14,15 +14,18 @@ return new class extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->integer('gutenberg_id')->unique();
             $table->string('title');
             $table->string('author')->nullable();
             $table->text('description')->nullable();
             $table->string('cover_url')->nullable();
             $table->string('download_url')->nullable();
-            $table->string('read_url');
-            $table->enum('status', ['reading', 'completed'])->default('reading');
-            $table->string('last_page')->nullable();
+            $table->string('read_url')->nullable(); // optional, same as download_url if no viewer
+            $table->text('subjects')->nullable();
+            $table->text('bookshelves')->nullable();
+            $table->string('language')->nullable();
+            $table->string('media_type')->nullable();
+            $table->integer('download_count')->default(0);
             $table->timestamps();
         });
     }

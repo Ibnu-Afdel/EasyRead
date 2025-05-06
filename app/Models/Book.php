@@ -10,10 +10,10 @@ class Book extends Model
     use HasFactory;
     protected $guarded = [];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
 
     public function borrowedBy()
     {
@@ -21,7 +21,14 @@ class Book extends Model
     }
 
     public function borrowedBooks()
-{
-    return $this->hasMany(BorrowedBook::class);
-}
+    {
+        return $this->hasMany(BorrowedBook::class);
+    }
+
+    public function readers()
+    {
+        return $this->belongsToMany(User::class)
+            ->withPivot(['status', 'last_page', 'started_at', 'finished_at'])
+            ->withTimestamps();
+    }
 }
