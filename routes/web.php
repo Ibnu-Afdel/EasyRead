@@ -14,42 +14,30 @@ use App\Livewire\MyBookList;
 use App\Models\Book;
 use Illuminate\Support\Facades\Route;
 
-// --------------------------------   Everybody ---------------------------------------------------------
-Route::view('/', 'home')->name('home');
-Route::view('/about', 'about')->name('about');
 
-// --------------------------------   logged out  ---------------------------------------------------------
-
-Route::middleware('guest')->group(function () {
-
-    Route::get('/register', [RegisterController::class, 'register'])->name('register');
-    Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
-
-    Route::get('/login', [SessionController::class, 'login'])->name('login');
-    Route::post('/login', [SessionController::class, 'store'])->name('login.store');
-});
-
-// --------------------------------   authenticated users  ---------------------------------------------------------
-
-Route::middleware('auth')->group(function () {
-    Route::get('/books', [BookController::class, 'index'])->name('books.index');
-    Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
-    Route::post('/books/{book}/borrow', [BookBorrowController::class, 'borrow'])->name('books.borrow');
-
-    Route::delete('/logout', [SessionController::class, 'destroy'])->name('logout');
-});
 
 // --------------------------------   Admins ---------------------------------------------------------
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
     Route::post('/books', [BookController::class, 'store'])->name('books.store');
-    Route::get('/books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
-    Route::patch('/books/{book}', [BookController::class, 'update'])->name('books.update');
-    Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
+    Route::get('/customBooks/{customBook}/edit', [BookController::class, 'edit'])->name('books.edit');
+    Route::patch('/customBooks/{customBook}', [BookController::class, 'update'])->name('books.update');
+    Route::delete('/customBooks/{customBook}', [BookController::class, 'destroy'])->name('books.destroy');
 
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
 });
+
+// --------------------------------   authenticated users  ---------------------------------------------------------
+
+Route::middleware('auth')->group(function () {
+    Route::get('/customBooks/{customBook}', [BookController::class, 'show'])->name('books.show');
+    Route::post('/customBooks/{customBook}/borrow', [BookBorrowController::class, 'borrow'])->name('books.borrow');
+
+    Route::delete('/logout', [SessionController::class, 'destroy'])->name('logout');
+});
+
+
 
 // --------------------------------   Librarians  ---------------------------------------------------------
 
@@ -80,4 +68,20 @@ Route::prefix('api')->name('api.')->group(function () {
     Route::get('/books', BookList::class)->name('books.index');
     Route::get('/books/{book}', BookShow::class)->name('books.show');
     Route::get('/my-books', MyBookList::class)->name('my-books.index');
+});
+
+// --------------------------------   Everybody ---------------------------------------------------------
+Route::view('/', 'home')->name('home');
+Route::view('/about', 'about')->name('about');
+Route::get('/books', [BookController::class, 'index'])->name('books.index');
+
+// --------------------------------   logged out  ---------------------------------------------------------
+
+Route::middleware('guest')->group(function () {
+
+    Route::get('/register', [RegisterController::class, 'register'])->name('register');
+    Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+
+    Route::get('/login', [SessionController::class, 'login'])->name('login');
+    Route::post('/login', [SessionController::class, 'store'])->name('login.store');
 });

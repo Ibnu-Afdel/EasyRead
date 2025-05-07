@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\CustomBook;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        return view('books.index', ['books' => Book::with('user')->get()]) ;
+        return view('books.index', ['books' => CustomBook::with('user')->get()]);
     }
 
     /**
@@ -27,7 +28,7 @@ class BookController extends Controller
         Gate::authorize('create', $book);
 
 
-        return view('books.create') ;
+        return view('books.create');
     }
 
     /**
@@ -39,35 +40,34 @@ class BookController extends Controller
             'name' => 'required|min:5',
             'description' => 'required',
             'BookCover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]) ;
+        ]);
 
-        $attribute['user_id'] = Auth::id() ;
+        $attribute['user_id'] = Auth::id();
 
-            if($request->hasFile('BookCover')){
-                $imagepath = $request->file('BookCover')->store('BookCovers', 'public');
-                $attribute['BookCover'] = Storage::url($imagepath);
-            } else{
-                $attribute['BookCover'] = null ;
-            }
-
-        Book::create($attribute);
-
-        $user = Auth::user();
-        if ($user->role === 'admin'){
-            return redirect()->route('admin');
-        } else{
-            return redirect()->route('books.index');
+        if ($request->hasFile('BookCover')) {
+            $imagepath = $request->file('BookCover')->store('BookCovers', 'public');
+            $attribute['BookCover'] = Storage::url($imagepath);
+        } else {
+            $attribute['BookCover'] = null;
         }
 
+        CustomBook::create($attribute);
+
+        $user = Auth::user();
+        if ($user->role === 'admin') {
+            return redirect()->route('admin');
+        } else {
+            return redirect()->route('books.index');
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Book $book)
+    public function show(CustomBook $customBook)
     {
 
-        return view('books.show', ['book' => $book]);
+        return view('books.show', ['customBook' => $customBook]);
     }
 
     /**
@@ -76,64 +76,62 @@ class BookController extends Controller
     public function edit(Book $book)
     {
         Gate::authorize('update',  $book);
-        return view('books.edit', ['book'=> $book]);
+        return view('books.edit', ['book' => $book]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Book $book, User $user)
+    public function update(Request $request, CustomBook $customBook, User $user)
     {
-        Gate::authorize('update',  [$book, $user]);
+        Gate::authorize('update',  [$customBook, $user]);
         $attribute = $request->validate([
             'name' => 'required|min:5',
             'description' => 'required',
             'BookCover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-//        $attribute['user_id'] = Auth::id() ;
+        //        $attribute['user_id'] = Auth::id() ;
 
-        if($request->hasFile('BookCover')){
-            if ($book->BookCover){
-                Storage::disk('public')->delete(str_replace('/storage/', '', $book->BookCover)) ;
+        if ($request->hasFile('BookCover')) {
+            if ($customBook->BookCover) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $customBook->BookCover));
             }
             $imagepath = $request->file('BookCover')->store('BookCovers', 'public');
             $attribute['BookCover'] = Storage::url($imagepath);
         }
-//        else {
-//            $attribute['BookCover'] = null;
-//        }
+        //        else {
+        //            $attribute['BookCover'] = null;
+        //        }
 
-        $book->update($attribute);
+        $customBook->update($attribute);
 
         $user = Auth::user();
 
-        if ($user->role === 'admin'){
-            return redirect()->route('admin', ['book' => $book]);
+        if ($user->role === 'admin') {
+            return redirect()->route('admin', ['book' => $customBook]);
         } else {
-            return redirect()->route('books.show', ['book' => $book]);
+            return redirect()->route('books.show', ['book' => $customBook]);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Book $book , Request $request)
+    public function destroy(CustomBook $customBook, Request $request)
     {
-        Gate::authorize('delete', $book);
-            if ($book->BookCover){
-                Storage::disk('public')->delete(str_replace('/storage/', '', $book->BookCover)) ;
+        Gate::authorize('delete', $customBook);
+        if ($customBook->BookCover) {
+            Storage::disk('public')->delete(str_replace('/storage/', '', $customBook->BookCover));
         }
-        $book->delete();
+        $customBook->delete();
 
         $user = Auth::user();
 
-        if ($user->role === 'admin'){
-            return redirect()->route('admin', ['book' => $book]);
+        if ($user->role === 'admin') {
+            return redirect()->route('admin', ['book' => $customBook]);
         } else {
             return redirect()->route('books.index');
         }
-
-
     }
 }

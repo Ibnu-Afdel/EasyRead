@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -60,5 +61,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Book::class)
             ->withPivot(['status', 'last_page', 'started_at', 'finished_at'])
             ->withTimestamps();
+    }
+
+    public function custom_books(): HasMany
+    {
+        return $this->hasMany(CustomBook::class);
     }
 }
