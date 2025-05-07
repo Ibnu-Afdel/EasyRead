@@ -14,70 +14,68 @@ use App\Livewire\MyBookList;
 use App\Models\Book;
 use Illuminate\Support\Facades\Route;
 
+// --------------------------------   Everybody ---------------------------------------------------------
 Route::view('/', 'home')->name('home');
 Route::view('/about', 'about')->name('about');
 
-
-Route::middleware('auth')->group(function () {
-    Route::controller(BookController::class)->group(function () {
-        Route::get('/books/create', 'create')->name('books.create');
-        Route::post('/books', 'store')->name('books.store');
-        Route::get('/books/{book}/edit', 'edit')
-            ->name('books.edit');
-
-        Route::patch('/books/{book}', 'update')
-            ->name('books.update');
-
-        Route::delete('/books/{book}', 'destroy')
-            ->name('books.destroy');
-    });
-    // Log Out
-    Route::delete('/logout', [SessionController::class, 'destroy'])->name('logout');
-});
+// --------------------------------   logged out  ---------------------------------------------------------
 
 Route::middleware('guest')->group(function () {
 
-    // Register
     Route::get('/register', [RegisterController::class, 'register'])->name('register');
     Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
-    // Log In
+
     Route::get('/login', [SessionController::class, 'login'])->name('login');
     Route::post('/login', [SessionController::class, 'store'])->name('login.store');
 });
 
-Route::controller(BookController::class)->group(function () {
-    Route::get('/books', 'index')->name('books.index');
-    Route::get('/books/{book}', 'show')->name('books.show');
+// --------------------------------   authenticated users  ---------------------------------------------------------
+
+Route::middleware('auth')->group(function () {
+    Route::get('/books', [BookController::class, 'index'])->name('books.index');
+    Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
+    Route::post('/books/{book}/borrow', [BookBorrowController::class, 'borrow'])->name('books.borrow');
+
+    Route::delete('/logout', [SessionController::class, 'destroy'])->name('logout');
 });
 
-Route::controller(AdminController::class)->group(function () {
-    Route::get('/admin', 'index')
-        ->middleware('admin')
-        ->name('admin');
+// --------------------------------   Admins ---------------------------------------------------------
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
+    Route::post('/books', [BookController::class, 'store'])->name('books.store');
+    Route::get('/books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
+    Route::patch('/books/{book}', [BookController::class, 'update'])->name('books.update');
+    Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
+
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin');
 });
 
+// --------------------------------   Librarians  ---------------------------------------------------------
 
-Route::controller(LibrarianController::class)->group(function () {
-    Route::get('/librarian', 'borrowedBooks')
-        ->middleware('librarian')
-        ->name('librarian.borrowed_books');
+
+Route::middleware(['auth', 'role:librarian'])->group(function () {
+    Route::get('/librarian', [LibrarianController::class, 'borrowedBooks'])->name('librarian.borrowed_books');
 });
 
-Route::post('/books/{book}/borrow', [BookBorrowController::class, 'borrow'])->name('books.borrow');
-Route::post('/borrowed-books/{id}/return', [BookBorrowController::class, 'markAsReturned'])
-    ->name('borrowed-books.return')
-    ->middleware('auth', 'role:owner,librarian');
+// --------------------------------   Owners  ---------------------------------------------------------
 
 Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::get('/owner/profile', [OwnerProfileController::class, 'profile'])->name('owner.profile');
     Route::post('/owner/profile', [ownerProfileController::class, 'update'])->name('owner.profile.update');
-});
 
-Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::post('/users/{user}/promote', [UserManagementController::class, 'promote'])->name('users.promote');
     Route::post('/users/{user}/demote', [UserManagementController::class, 'demote'])->name('users.demote');
 });
 
+// --------------------------------   Owners and librarians  ---------------------------------------------------------
+
+
+Route::middleware(['auth', 'role:owner, librarian'])->group(function () {
+    Route::post('/borrowed-books/{id}/return', [BookBorrowController::class, 'markAsReturned'])->name('borrowed-books.return');
+});
+
+// --------------------------------   API  ---------------------------------------------------------
 Route::prefix('api')->name('api.')->group(function () {
     Route::get('/books', BookList::class)->name('books.index');
     Route::get('/books/{book}', BookShow::class)->name('books.show');
