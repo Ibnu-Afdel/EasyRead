@@ -20,7 +20,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('cover_url')->nullable();
             $table->string('download_url')->nullable();
-            $table->string('read_url')->nullable(); // optional, same as download_url if no viewer
+            $table->string('read_url')->nullable();
+            $table->json('available_formats')->nullable();
             $table->text('subjects')->nullable();
             $table->text('bookshelves')->nullable();
             $table->string('language')->nullable();

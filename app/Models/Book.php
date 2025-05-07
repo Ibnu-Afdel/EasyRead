@@ -10,10 +10,12 @@ class Book extends Model
     use HasFactory;
     protected $guarded = [];
 
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
+    protected $casts = [
+        'available_formats' => 'array',
+        'subjects' => 'array',
+        'bookshelves' => 'array',
+    ];
+
 
     public function borrowedBy()
     {
@@ -25,10 +27,10 @@ class Book extends Model
         return $this->hasMany(BorrowedBook::class);
     }
 
-    public function readers()
+    public function users()
     {
-        return $this->belongsToMany(User::class)
-            ->withPivot(['status', 'last_page', 'started_at', 'finished_at'])
+        return $this->belongsToMany(User::class, 'book_user')
+            ->withPivot('status', 'last_page', 'started_at', 'finished_at')
             ->withTimestamps();
     }
 }
