@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\CustomBook;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,11 +17,10 @@ return new class extends Migration
             $table->string('status')->default('available');
             $table->dateTime('borrow_date')->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('book_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(CustomBook::class)->constrained()->cascadeOnDelete();
             $table->date('due_date')->nullable();
             $table->dateTime('return_date')->nullable();
             $table->timestamps();
-            
         });
     }
 

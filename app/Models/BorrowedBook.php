@@ -9,15 +9,15 @@ class BorrowedBook extends Model
 {
     use HasFactory;
 
-protected $guarded = [];
+    protected $guarded = [];
 
-protected $casts = [
-    'due_date' => 'date',
-];
+    protected $casts = [
+        'due_date' => 'date',
+    ];
 
     public function book()
     {
-        return $this->belongsTo(Book::class);
+        return $this->belongsTo(CustomBook::class);
     }
 
     public function user()
