@@ -1,5 +1,4 @@
 <div>
-
     <div class="container mx-auto px-4 py-8">
         @if (session()->has('message'))
             <div
@@ -14,29 +13,22 @@
                 placeholder="Search by title, author, description, subjects, or Gutenberg ID...">
         </div>
 
-        @if ($books->isEmpty() && trim($search) !== '')
+        @if (!$decoded_book)
             <div class="text-center py-12">
                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 10h.01" />
                 </svg>
-                <h3 class="mt-2 text-lg font-medium text-gray-900">No
-                    books found for "{{ $search }}"</h3>
-                <p class="mt-1 text-sm text-gray-500">Try searching for
-                    something else or clear the search.</p>
-            </div>
-        @elseif ($books->isEmpty())
-            <div class="text-center py-12">
-                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                </svg>
-                <h3 class="mt-2 text-lg font-medium text-gray-900">No
-                    books available</h3>
-                <p class="mt-1 text-sm text-gray-500">Please check back
-                    later or try importing some books.</p>
+                @if (trim($search) !== '')
+                    <h3 class="mt-2 text-lg font-medium text-gray-900">No books found for "{{ $search }}"</h3>
+                    <p class="mt-1 text-sm text-gray-500">Try searching for something else or clear the search.</p>
+                @else
+                    <h3 class="mt-2 text-lg font-medium text-gray-900">No books available</h3>
+                    <p class="mt-1 text-sm text-gray-500">Please check back later or try importing some books.</p>
+                @endif
             </div>
         @else
+            {{-- existing books display --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-8">
                 @foreach ($books as $book)
                     <div
@@ -44,7 +36,7 @@
                         @if ($book->cover_url)
                             <div class="w-full h-56 overflow-hidden">
                                 <img src="{{ $book->cover_url }}" alt="Cover for {{ $book->title }}"
-                                    class="w-full h-full object-cover" {{-- onerror="this.onerror=null; this.src='https://placehold.co/400x560/cccccc/969696?text=No+Cover';" --}}>
+                                    class="w-full h-full object-cover">
                             </div>
                         @else
                             <div class="w-full h-56 bg-gray-200 flex items-center justify-center text-gray-400">
@@ -52,8 +44,7 @@
                                     <path
                                         d="M2.003 5.884L10 2.5l7.9973.384A1 1 0 0019 7V17a1 1 0 01-1 1H2a1 1 0 01-1-1V7a1 1 0 011.003-1.116zM17 16V7l-7-3.043L3 7v9h14zM5 14h10V9H5v5z" />
                                 </svg>
-                                <span class="sr-only">No Cover
-                                    Available</span>
+                                <span class="sr-only">No Cover Available</span>
                             </div>
                         @endif
 
@@ -65,13 +56,7 @@
                                 By: {{ $book->author ?: 'Unknown Author' }}
                             </p>
                             <p class="text-sm text-gray-600 line-clamp-3 mb-3 flex-grow min-h-[60px]">
-
-                                {{ \Illuminate\Support\Str::limit(
-                                    $book->description ?:
-                                    'No description
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    available.',
-                                    100,
-                                ) }}
+                                {{ \Illuminate\Support\Str::limit($book->description ?: 'No description available.', 100) }}
                             </p>
                             <div class="text-xs text-gray-500 mb-1">
                                 <span class="font-semibold">Language:</span>
@@ -110,6 +95,17 @@
 
                                 {{-- Download Options --}}
                                 @if ($book->available_formats && is_array($book->available_formats) && count($book->available_formats) > 0)
+                                    @php
+                                        $formatLabels = [
+                                            'application/epub+zip' => 'EPUB',
+                                            'application/pdf' => 'PDF',
+                                            'text/plain; charset=utf-8' => 'TXT',
+                                            'text/html; charset=utf-8' => 'HTML',
+                                            'application/octet-stream' => 'Binary',
+                                            'text/plain' => 'TXT',
+                                            'application/x-mobipocket-ebook' => 'MOBI',
+                                        ];
+                                    @endphp
                                     <div class="pt-1">
                                         <p class="text-xs font-semibold text-gray-700 mb-1 text-center">Download as:</p>
                                         <div class="flex flex-wrap gap-1 justify-center">
@@ -118,7 +114,7 @@
                                                     <a href="{{ $url }}" target="_blank"
                                                         rel="noopener noreferrer"
                                                         class="flex-grow basis-1/4 max-w-max py-1 px-2 text-xs font-medium text-center text-gray-900 bg-gray-100 rounded-md border border-gray-300 hover:bg-gray-200 focus:ring-2 focus:outline-none focus:ring-gray-200 transition-colors">
-                                                        {{ strtoupper($format) }}
+                                                        {{ $formatLabels[$format] ?? strtoupper(explode('/', $format)[1] ?? 'FILE') }}
                                                     </a>
                                                 @endif
                                             @endforeach

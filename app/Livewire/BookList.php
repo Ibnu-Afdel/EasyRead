@@ -73,13 +73,22 @@ class BookList extends Component
         }
 
         $books = $query->latest('id')->paginate(12);
-        foreach ($books as $book) {
-            $decoded_book = json_decode($book->available_formats);
+
+        // Set default value
+        $decoded_book = null;
+
+        // Only decode if books exist
+        if ($books->count() > 0) {
+            // Just use the first book as an example if that's what you meant
+            $decoded_book = json_decode($books->first()->available_formats);
         }
+        // foreach ($books as $book) {
+        //     $decoded_book = json_decode($book->available_formats);
+        // }
 
         return view('livewire.book-list', [
             'books' => $books,
-            'decoded_books' => $decoded_book,
+            'decoded_book' => $decoded_book,
         ]);
     }
 }
