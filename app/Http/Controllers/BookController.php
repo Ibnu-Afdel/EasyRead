@@ -73,10 +73,10 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Book $book)
+    public function edit(CustomBook $customBook)
     {
-        Gate::authorize('update',  $book);
-        return view('books.edit', ['book' => $book]);
+        Gate::authorize('update',  $customBook);
+        return view('books.edit', ['book' => $customBook]);
     }
 
     /**
@@ -84,7 +84,6 @@ class BookController extends Controller
      */
     public function update(Request $request, CustomBook $customBook, User $user)
     {
-        Gate::authorize('update',  [$customBook, $user]);
         $attribute = $request->validate([
             'name' => 'required|min:5',
             'description' => 'required',
@@ -108,11 +107,7 @@ class BookController extends Controller
 
         $user = Auth::user();
 
-        if ($user->role === 'admin') {
-            return redirect()->route('admin', ['book' => $customBook]);
-        } else {
-            return redirect()->route('books.show', ['book' => $customBook]);
-        }
+        return redirect()->route('admin', ['book' => $customBook]);
     }
 
     /**
@@ -120,7 +115,6 @@ class BookController extends Controller
      */
     public function destroy(CustomBook $customBook, Request $request)
     {
-        Gate::authorize('delete', $customBook);
         if ($customBook->BookCover) {
             Storage::disk('public')->delete(str_replace('/storage/', '', $customBook->BookCover));
         }
@@ -128,10 +122,6 @@ class BookController extends Controller
 
         $user = Auth::user();
 
-        if ($user->role === 'admin') {
-            return redirect()->route('admin', ['book' => $customBook]);
-        } else {
-            return redirect()->route('books.index');
-        }
+        return redirect()->route('admin', ['book' => $customBook]);
     }
 }

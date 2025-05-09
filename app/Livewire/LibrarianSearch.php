@@ -23,16 +23,14 @@ class LibrarianSearch extends Component
     {
 
         $borrowedBooks = BorrowedBook::with('book', 'user')
-        ->where('status', 'borrowed')
-        ->when($this->search, function ($query) {
-            $query->whereHas('book', function ($query) {
-                $query->where('name', 'like', "%{$this->search}%");
-            });
-        })
-        ->simplePaginate(15);
-        
-        return view('livewire.librarian-search', ['borrowedBooks' => $borrowedBooks]);
+            ->where('status', 'borrowed')
+            ->when($this->search, function ($query) {
+                $query->whereHas('book', function ($query) {
+                    $query->where('name', 'like', "%{$this->search}%");
+                });
+            })
+            ->simplePaginate(15);
 
-        
+        return view('livewire.librarian-search', ['borrowedBooks' => $borrowedBooks]);
     }
 }

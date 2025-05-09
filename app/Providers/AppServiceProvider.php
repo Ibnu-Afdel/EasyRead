@@ -37,14 +37,18 @@ class AppServiceProvider extends ServiceProvider
                 'email' => env('DEFAULT_ADMIN_EMAIL'),
                 'password' => Hash::make(env('DEFAULT_ADMIN_PASSWORD')),
                 'role' => 'owner'
-            ]) ;
+            ]);
         }
 
         // is this even needed, needs more research or even the above protected one
         // Gate::policy(Book::class, BookPolicy::class);
 
-        Gate::define('is-librarian', function(User $user){
-            return $user->role === 'librarian' || $user->role === 'owner' ;
-        }) ;
+        Gate::define('is-librarian', function (User $user) {
+            return $user->role === 'librarian' || $user->role === 'owner';
+        });
+
+        Gate::define('update', function (User $user) {
+            return $user->role === 'admin' || $user->role === 'owner';
+        });
     }
 }

@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 // --------------------------------   Admins ---------------------------------------------------------
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:admin,owner'])->group(function () {
     Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
     Route::post('/books', [BookController::class, 'store'])->name('books.store');
     Route::get('/customBooks/{customBook}/edit', [BookController::class, 'edit'])->name('books.edit');
@@ -42,8 +42,9 @@ Route::middleware('auth')->group(function () {
 // --------------------------------   Librarians  ---------------------------------------------------------
 
 
-Route::middleware(['auth', 'role:librarian'])->group(function () {
+Route::middleware(['auth', 'role:librarian,owner'])->group(function () {
     Route::get('/librarian', [LibrarianController::class, 'borrowedBooks'])->name('librarian.borrowed_books');
+    Route::post('/borrowed-books/{id}/return', [BookBorrowController::class, 'markAsReturned'])->name('borrowed-books.return');
 });
 
 // --------------------------------   Owners  ---------------------------------------------------------
@@ -56,12 +57,7 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::post('/users/{user}/demote', [UserManagementController::class, 'demote'])->name('users.demote');
 });
 
-// --------------------------------   Owners and librarians  ---------------------------------------------------------
 
-
-Route::middleware(['auth', 'role:owner, librarian'])->group(function () {
-    Route::post('/borrowed-books/{id}/return', [BookBorrowController::class, 'markAsReturned'])->name('borrowed-books.return');
-});
 
 // --------------------------------   API  ---------------------------------------------------------
 Route::prefix('api')->name('api.')->group(function () {

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
-use App\Models\BorrowedBook;  // Assuming 'Borrow' is the same as 'BorrowedBook'
+use App\Models\BorrowedBook;
 use App\Models\CustomBook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

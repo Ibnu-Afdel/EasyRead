@@ -16,7 +16,7 @@ class IsLibrarian
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ((Auth::check() && Auth::user()->role === 'librarian') || (Auth::check() && Auth::user()->role === 'owner') ){
+        if (Auth::check() && (Auth::user()->role === 'librarian' || Auth::user()->role === 'owner')) {
             return $next($request);
         }
         abort(403);

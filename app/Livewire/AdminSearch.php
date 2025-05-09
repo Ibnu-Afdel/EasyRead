@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Book;
 use App\Models\CustomBook;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
