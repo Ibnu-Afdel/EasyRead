@@ -1,0 +1,33 @@
+/* book-list */
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* book-show */
+iframe {
+        background-color: #FEF9E7 !important;
+    }
+
+iframe::content {
+    background-color: #FEF9E7 !important;
+    color: #333333 !important;
+    font-family: 'Georgia', serif !important;
+    font-size: 1.1em !important;
+    line-height: 1.6 !important;
+    white-space: pre-wrap !important;
+    max-width: 800px !important;
+    margin: 0 auto !important;
+    padding: 20px !important;
+}
