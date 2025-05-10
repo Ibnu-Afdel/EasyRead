@@ -30,19 +30,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
-        if (!User::where('role', 'owner')->exists()) {
-            User::create([
-                'name' => env('DEFAULT_ADMIN_NAME'),
-                'email' => env('DEFAULT_ADMIN_EMAIL'),
-                'password' => Hash::make(env('DEFAULT_ADMIN_PASSWORD')),
-                'role' => 'owner'
-            ]);
-        }
-
-        // is this even needed, needs more research or even the above protected one
-        // Gate::policy(Book::class, BookPolicy::class);
-
         Gate::define('is-librarian', function (User $user) {
             return $user->role === 'librarian' || $user->role === 'owner';
         });

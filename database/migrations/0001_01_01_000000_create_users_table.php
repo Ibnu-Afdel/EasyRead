@@ -14,9 +14,6 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->enum('role', ['owner', 'admin', 'librarian', 'user'])->default('user');
-//            $table->boolean('is_member')->default(true);
-//            $table->boolean('is_admin')->default(false);
-//            $table->boolean('is_librarian')->default(false);
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
