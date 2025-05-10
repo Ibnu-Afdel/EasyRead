@@ -62,8 +62,8 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
 // --------------------------------   API  ---------------------------------------------------------
 Route::prefix('api')->name('api.')->group(function () {
     Route::get('/books', BookList::class)->name('books.index');
-    Route::get('/books/{book}', BookShow::class)->name('books.show');
     Route::get('/my-books', MyBookList::class)->name('my-books.index');
+    Route::get('/books/{book}', BookShow::class)->name('books.show');
 });
 
 // --------------------------------   Everybody ---------------------------------------------------------
