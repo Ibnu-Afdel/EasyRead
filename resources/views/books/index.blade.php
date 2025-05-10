@@ -72,7 +72,23 @@
                         </div>
                     </article>
                 @empty
-                    No Book Available !
+                    <div class="col-span-2">
+                        <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-xl shadow-md">
+                            <svg class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                            <h3 class="mt-4 text-xl font-semibold text-gray-900 dark:text-white">No Books Available</h3>
+                            <p class="mt-2 text-base text-gray-500 dark:text-gray-400">Start exploring our collection by importing books from Project Gutenberg.</p>
+                            <div class="mt-6">
+                                <a href="{{ route('api.books.index') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                    Explore Gutenberg Books
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 @endforelse
             </div>
         </div>
