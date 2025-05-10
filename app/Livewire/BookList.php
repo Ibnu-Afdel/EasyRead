@@ -73,8 +73,11 @@ class BookList extends Component
                 $subQuery->where('title', 'like', $searchTerm)
                     ->orWhere('author', 'like', $searchTerm)
                     ->orWhere('description', 'like', $searchTerm)
-                    ->orWhere('subjects', 'like', $searchTerm)
-                    ->orWhere('gutenberg_id', '=', $rawSearchTerm);
+                    ->orWhere('subjects', 'like', $searchTerm);
+
+                if (is_numeric($rawSearchTerm)) {
+                    $subQuery->orWhere('gutenberg_id', '=', (int) $rawSearchTerm);
+                }
             });
         }
 
