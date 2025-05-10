@@ -11,15 +11,25 @@ class BookList extends Component
     use WithPagination;
 
     public string $search = '';
+    public string $sortField = 'id';
+    public string $sortDirection = 'desc';
 
     protected string $paginationTheme = 'tailwind';
-
 
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    public function sortBy($field)
+    {
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
+    }
 
     public function read(int $bookId)
     {
@@ -27,22 +37,18 @@ class BookList extends Component
 
         if (auth()->check()) {
             auth()->user()->books()->syncWithoutDetaching([
-                $book->id => ['status' => 'reading', 'started_at' =>
-                now()]
+                $book->id => ['status' => 'reading', 'started_at' => now()]
             ]);
         }
 
-        return redirect()->route('api.books.show', ['book' =>
-        $book->id]);
+        return redirect()->route('api.books.show', ['book' => $book->id]);
     }
-
 
     public function download(int $bookId)
     {
         $book = Book::findOrFail($bookId);
 
         if ($book->download_url) {
-
             return redirect()->away($book->download_url);
         }
 
@@ -72,23 +78,20 @@ class BookList extends Component
             });
         }
 
-        $books = $query->latest('id')->paginate(12);
+        $query->orderBy($this->sortField, $this->sortDirection);
+        $books = $query->paginate(12);
 
-        // Set default value
-        $decoded_book = null;
-
-        // Only decode if books exist
-        if ($books->count() > 0) {
-            // Just use the first book as an example if that's what you meant
-            $decoded_book = json_decode($books->first()->available_formats);
+        foreach ($books as $book) {
+            if (is_string($book->available_formats) && !empty($book->available_formats)) {
+                $book->available_formats = json_decode($book->available_formats, true);
+            }
         }
-        // foreach ($books as $book) {
-        //     $decoded_book = json_decode($book->available_formats);
-        // }
+
+        $hasBooks = $books->count() > 0;
 
         return view('livewire.book-list', [
             'books' => $books,
-            'decoded_book' => $decoded_book,
+            'decoded_book' => $hasBooks ? true : null,
         ]);
     }
 }
